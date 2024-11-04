@@ -58,6 +58,7 @@ private:
 #endif // !XMLREADER_H_
 
 
+//ifstream:
 //filebuf is the internal class that actually does the reading, worth looking into
 
 //get(dest, size, optional delimiter) places characetrs into dest until size is met or line end is encountered
@@ -69,9 +70,3 @@ private:
 //seekg(int pos) moves the read head to the specified pos relative to beginning
 //tellg() returns current read head pos
 //gcount() returns number of characters extracted by last read operation
-
-
-//void accessObject(string objectName) //opens next objectName object in the tree
-//void closeObject() //exits current object object
-//string returnParameter(string parameterName) //returns a parameter of the object
-//string returnObjectParameter(string parameterName) //returns a parameter from the object declaration
