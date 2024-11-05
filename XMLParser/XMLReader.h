@@ -1,9 +1,4 @@
 #pragma once
-#ifndef XMLREADER_H_
-#define XMLREADER_H_
-
-
-#include <iostream>
 /*
 Copyright(c) 2024 , aWildKaelin
 All rights reserved.
@@ -12,6 +7,10 @@ This source code is licensed under the BSD - style license found in the
 LICENSE file in the root directory of this source tree.
 */
 
+#ifndef XMLREADER_H_
+#define XMLREADER_H_
+
+#include <iostream>
 #include <fstream>
 #include <list>
 
@@ -24,22 +23,22 @@ public:
 	void fileOpen(std::string filename);
 	void fileClose();
 
-	//opens the first objectName object in the tree
-	//returns 0 if successful, otherwise error
-	int accessObject(std::string objectName);
+	//opens the first branchName object in the tree
+	//returns 0 if successful
+	int accessBranch(std::string objectName);
 
-	//exits current object
-	void closeObject();
+	//exits current Branch
+	void closeBranch();
 
 	//selects the next instance of the currently open object type
-	//returns 0 if successful, otherwise error
-	int nextObject();
+	//returns 0 if successful
+	int nextBranch();
 
-	//returns a parameter of the object
+	//returns a parameter of the branch
 	std::string returnParameter(std::string parameterName);
 
-	//returns a parameter from the object declaration
-	std::string returnObjectParameter(std::string parameterName);
+	//returns a parameter from the branch declaration
+	std::string returnBranchParameter(std::string parameterName);
 
 	int parseInt(std::string a);
 	float parseFloat(std::string a);

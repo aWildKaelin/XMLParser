@@ -30,7 +30,7 @@ void XMLReader::fileClose()
 }
 
 
-int XMLReader::accessObject(std::string objectName)
+int XMLReader::accessBranch(std::string objectName)
 {
 	int readHead = 0;
 
@@ -94,7 +94,7 @@ int XMLReader::accessObject(std::string objectName)
 }
 
 
-void XMLReader::closeObject()
+void XMLReader::closeBranch()
 {
 	objectStack.pop_back();
 	objectNames.pop_back();
@@ -103,9 +103,10 @@ void XMLReader::closeObject()
 }
 
 
-int XMLReader::nextObject()
+int XMLReader::nextBranch()
 {
 	std::string storage = this->objectNames.back();
+	int readHeadStorage = objectStack.back();
 	in.getline(buffer, 1024);
 
 	objectStack.pop_back();
@@ -148,7 +149,7 @@ int XMLReader::nextObject()
 				{
 					std::cout << "XMLReader error: end of object" << std::endl;
 					search = false;
-					objectStack.push_back(readHead);
+					objectStack.push_back(readHeadStorage);
 					objectNames.push_back(storage);
 					in.seekg(objectStack.back());
 					return -1;
@@ -220,7 +221,7 @@ std::string XMLReader::returnParameter(std::string parameterName)
 }
 
 
-std::string XMLReader::returnObjectParameter(std::string parameterName)
+std::string XMLReader::returnBranchParameter(std::string parameterName)
 {
 	in.seekg(objectStack.back());
 
