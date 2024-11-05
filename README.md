@@ -5,7 +5,7 @@ Still a work in progress, awaiting documentation, a couple of comfort features a
 
 Just copy XMLReader.h and XMLReader.cpp to your project and everything should work. 
 It currently has a tendency to run forever, so be extremely careful with usage.
-Also be careful to only use tab spaces ('\t') when indenting branches.
+Also be careful to only use tab spaces ('\t') when indenting branches inside the XML file.
 
 **TODO:**
 - make nextObject() part of accessObject()
