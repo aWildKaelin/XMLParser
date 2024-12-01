@@ -8,7 +8,6 @@ It currently has a tendency to run forever, so be extremely careful with usage.
 Also be careful to only use tab spaces ('\t') when indenting branches.
 
 **TODO:**
-- make nextObject() part of accessObject()
 - add reccursive reading of the XML tree
 - make a buffer that reads and indexes all objects from current branch for more efficient selection
 - automatically open root object upon opening a file

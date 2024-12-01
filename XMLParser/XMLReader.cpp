@@ -1,11 +1,3 @@
-/*
-Copyright(c) 2024 , aWildKaelin
-All rights reserved.
-
-This source code is licensed under the BSD - style license found in the
-LICENSE file in the root directory of this source tree.
-*/
-
 #include "XMLReader.h"
 
 XMLReader::XMLReader()
@@ -35,22 +27,39 @@ int XMLReader::accessBranch(std::string objectName)
 	int readHead = 0;
 
 	bool search = true;
+	int cursorPos = in.tellg();
 
-	int currentTabCount = 0;
+	int currentTabCount = tabCount;
 	while (search)
 	{
 		std::string returnString = "";
 
 		//move read head to remove spaces
 		char temp = in.get();
+		cursorPos = in.tellg();
 		if (temp == '<')
 		{
 			search = false;
 			readHead = in.tellg();
 		}
-		else if(temp == '\t')
+		else if (temp == '\t')
 		{
 			currentTabCount++;
+		}
+		else if (temp == '\n')
+		{
+			currentTabCount = 0;
+		}
+		else if (temp == ' ')
+		{
+			in.getline(buffer, 1024);
+			currentTabCount = 0;
+		}
+
+		if (currentTabCount > tabCount + 1)
+		{
+			in.getline(buffer, 1024);
+			currentTabCount = 0;
 		}
 
 		if (!search)
@@ -59,6 +68,7 @@ int XMLReader::accessBranch(std::string objectName)
 			while (in.peek() != '>' && in.peek() != ' ')
 			{
 				returnString += in.get();
+				cursorPos = in.tellg();
 			}
 
 			//just a safety check to avoid read access violation
@@ -68,26 +78,27 @@ int XMLReader::accessBranch(std::string objectName)
 				if (returnString == "/" + objectNames.back() && currentTabCount == tabCount)
 				{
 					std::cout << "XMLReader error: end of object" << std::endl;
+					in.seekg(objectStack.back());
 					search = false;
 					return -1;
 				}
 			}
 
-			if (returnString == objectName)
+			int evaluatedTabCount = tabCount == -1 ? tabCount : tabCount + 1;
+			if (returnString == objectName && currentTabCount == evaluatedTabCount)
 			{
 				objectStack.push_back(readHead);
 				objectNames.push_back(objectName);
 				in.seekg(objectStack.back());
-				if (objectNames.size() != 1)
-				{
-					tabCount++;
-				}
+
+				tabCount++;
 				return 0;
 			}
 			else
 			{
 				in.getline(buffer, 1024);
 				search = true;
+				currentTabCount = 0;
 			}
 		}
 	}
@@ -96,10 +107,13 @@ int XMLReader::accessBranch(std::string objectName)
 
 void XMLReader::closeBranch()
 {
-	objectStack.pop_back();
-	objectNames.pop_back();
-	in.seekg(objectStack.back());
-	tabCount--;
+	if (objectStack.size() > 1)
+	{
+		objectStack.pop_back();
+		objectNames.pop_back();
+		in.seekg(objectStack.back());
+		tabCount--;
+	}
 }
 
 
@@ -113,6 +127,7 @@ int XMLReader::nextBranch()
 	objectNames.pop_back();
 
 	int readHead = 0;
+	int cursorPos = in.tellg();
 
 	bool search = true;
 
@@ -123,14 +138,30 @@ int XMLReader::nextBranch()
 
 		//move read head to remove spaces
 		char temp = in.get();
+		cursorPos = in.tellg();
 		if (temp == '<')
 		{
 			search = false;
 			readHead = in.tellg();
 		}
-		else if(temp == '\t')
+		else if (temp == '\t')
 		{
 			currentTabCount++;
+		}
+		else if (temp == '\n')
+		{
+			currentTabCount = 0;
+		}
+		else if (temp == ' ')
+		{
+			in.getline(buffer, 1024);
+			currentTabCount = 0;
+		}
+
+		if (currentTabCount > tabCount)
+		{
+			in.getline(buffer, 1024);
+			currentTabCount = 0;
 		}
 
 		if (!search)
@@ -139,13 +170,14 @@ int XMLReader::nextBranch()
 			while (in.peek() != '>' && in.peek() != ' ')
 			{
 				returnString += in.get();
+				cursorPos = in.tellg();
 			}
 
 			//just a safety check to avoid read access violation
 			if (objectNames.size() > 0)
 			{
 				//if end of currently open object, error
-				if (returnString == "/" + objectNames.back() && currentTabCount == tabCount-1)
+				if (returnString == "/" + objectNames.back() && currentTabCount == tabCount - 1)
 				{
 					std::cout << "XMLReader error: end of object" << std::endl;
 					search = false;
@@ -221,15 +253,17 @@ std::string XMLReader::returnParameter(std::string parameterName)
 }
 
 
-std::string XMLReader::returnBranchParameter(std::string parameterName)
+std::string XMLReader::returnBranchAttribute(std::string parameterName)
 {
 	in.seekg(objectStack.back());
 
 	while (true)
 	{
 		char temp = in.get();
-		while (temp != ' ') 
-		{ temp = in.get(); };
+		while (temp != ' ')
+		{
+			temp = in.get();
+		};
 
 		std::string returnString = "";
 
@@ -301,4 +335,3 @@ float XMLReader::parseFloat(std::string a)
 	}
 	return num / multiplier;
 }
-

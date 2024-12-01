@@ -1,12 +1,4 @@
 #pragma once
-/*
-Copyright(c) 2024 , aWildKaelin
-All rights reserved.
-
-This source code is licensed under the BSD - style license found in the
-LICENSE file in the root directory of this source tree.
-*/
-
 #ifndef XMLREADER_H_
 #define XMLREADER_H_
 
@@ -23,22 +15,22 @@ public:
 	void fileOpen(std::string filename);
 	void fileClose();
 
-	//opens the first branchName object in the tree
-	//returns 0 if successful
-	int accessBranch(std::string objectName);
+	//opens the first branchName branch in the tree
+	//returns 0 if successful, otherwise error
+	int accessBranch(std::string branchName);
 
 	//exits current Branch
 	void closeBranch();
 
-	//selects the next instance of the currently open object type
-	//returns 0 if successful
+	//selects the next instance of the currently open branch
+	//returns 0 if successful, otherwise error
 	int nextBranch();
 
 	//returns a parameter of the branch
 	std::string returnParameter(std::string parameterName);
 
-	//returns a parameter from the branch declaration
-	std::string returnBranchParameter(std::string parameterName);
+	//returns an attribute from the object declaration
+	std::string returnBranchAttribute(std::string parameterName);
 
 	int parseInt(std::string a);
 	float parseFloat(std::string a);
@@ -49,15 +41,13 @@ private:
 	char buffer[1024] = { ' ' };
 	uint32_t readHead = 0;
 
-	int tabCount = 0;
+	int tabCount = -1;
 
 	std::list<uint32_t> objectStack;
 	std::list<std::string> objectNames;
 };
-#endif // !XMLREADER_H_
 
 
-//ifstream:
 //filebuf is the internal class that actually does the reading, worth looking into
 
 //get(dest, size, optional delimiter) places characetrs into dest until size is met or line end is encountered
@@ -69,3 +59,12 @@ private:
 //seekg(int pos) moves the read head to the specified pos relative to beginning
 //tellg() returns current read head pos
 //gcount() returns number of characters extracted by last read operation
+
+
+//void accessObject(string objectName) //opens next objectName object in the tree
+//void closeObject() //exits current object object
+//string returnParameter(string parameterName) //returns a parameter of the object
+//string returnBranchAttribute(string parameterName) //returns a parameter from the object declaration
+
+
+#endif

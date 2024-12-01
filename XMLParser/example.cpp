@@ -22,7 +22,7 @@ int main()
 
     //every action happens relative to the currently open branch
     //this one returns a value from inside the branch declaration
-    std::string s = reader.returnBranchParameter("index");
+    std::string s = reader.returnBranchAttribute("index");
 
     //everything is returned as a string, so numbers must be converted
     std::cout << reader.parseInt(s) << std::endl;
@@ -38,7 +38,7 @@ int main()
     std::cout << std::endl;
 
     //repeat steps from before, just with a different object
-    s = reader.returnBranchParameter("index");
+    s = reader.returnBranchAttribute("index");
 
     //this object's index is a float, so I'm using the parseFloat() function
     std::cout << reader.parseFloat(s) << std::endl;
