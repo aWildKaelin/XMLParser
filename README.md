@@ -1,11 +1,11 @@
 # XMLParser
 
 Simple C++ based XML parser designed for a different project I'm working on, however I thought others might find my approach useful.
-Still a work in progress, awaiting documentation, a couple of comfort features and a usage example
+Still a work in progress. I swear I haven't forgotten about this repo, I've just haven't had time to focus on this
 
 Just copy XMLReader.h and XMLReader.cpp to your project and everything should work. 
 It currently has a tendency to run forever, so be extremely careful with usage.
-Also be careful to only use tab spaces ('\t') when indenting branches.
+Also be careful to only use tab spaces ('\t') when indenting branches inside the XML file.
 
 **TODO:**
 - add reccursive reading of the XML tree
